@@ -30,8 +30,10 @@ class MyApp extends StatelessWidget {
           seedColor: Colors.black,
         ),
         primaryColor: Colors.black,
+        visualDensity: VisualDensity.adaptivePlatformDensity,
         //useMaterial3: true,
       ),
+      debugShowCheckedModeBanner: false,
       home: const WebviewController(),
     );
   }

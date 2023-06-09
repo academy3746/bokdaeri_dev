@@ -130,54 +130,56 @@ class _WebviewControllerState extends State<WebviewController> {
                 }
                 return false;
               },
-              child: WebView(
-                initialUrl: url,
-                javascriptMode: JavascriptMode.unrestricted,
-                onWebResourceError: (error) {
-                  print("Error Code: ${error.errorCode}");
-                  print("Error Description: ${error.description}");
-                },
-                onPageStarted: (String url) async {
-                  print("Current Page: $url");
-                },
-                onWebViewCreated:
-                    (WebViewController webViewController) async {
-                  _controller.complete(webViewController);
-                  _viewController = webViewController;
-                  webViewController.currentUrl().then((url) {
-                    if (url == "http://bokdaeri.com/") {
-                      setState(() {
-                        isInMainPage = true;
-                      });
-                    } else {
-                      setState(() {
-                        isInMainPage = false;
-                      });
+              child: SafeArea(
+                child: WebView(
+                  initialUrl: url,
+                  javascriptMode: JavascriptMode.unrestricted,
+                  onWebResourceError: (error) {
+                    print("Error Code: ${error.errorCode}");
+                    print("Error Description: ${error.description}");
+                  },
+                  onPageStarted: (String url) async {
+                    print("Current Page: $url");
+                  },
+                  onWebViewCreated:
+                      (WebViewController webViewController) async {
+                    _controller.complete(webViewController);
+                    _viewController = webViewController;
+                    webViewController.currentUrl().then((url) {
+                      if (url == "http://bokdaeri.com/") {
+                        setState(() {
+                          isInMainPage = true;
+                        });
+                      } else {
+                        setState(() {
+                          isInMainPage = false;
+                        });
+                      }
+                    });
+                  },
+                  onPageFinished: (String url) async {
+                    if (url.contains("http://bokdaeri.com/") &&
+                        _viewController != null) {
+                      final cookies = await _getCookies(_viewController!);
+                      await _saveCookies(cookies);
                     }
-                  });
-                },
-                onPageFinished: (String url) async {
-                  if (url.contains("http://bokdaeri.com/") &&
-                      _viewController != null) {
-                    final cookies = await _getCookies(_viewController!);
-                    await _saveCookies(cookies);
-                  }
 
-                  if (url.contains("http://bokdaeri.com/login.php") && _viewController != null) {
-                    final cookies = await _loadCookies();
+                    if (url.contains("http://bokdaeri.com/login.php") && _viewController != null) {
+                      final cookies = await _loadCookies();
 
-                    if (cookies != null) {
-                      await _setCookies(_viewController!, cookies);
+                      if (cookies != null) {
+                        await _setCookies(_viewController!, cookies);
+                      }
                     }
-                  }
-                },
-                gestureNavigationEnabled: true,
-                // ignore: prefer_collection_literals
-                gestureRecognizers: <Factory<OneSequenceGestureRecognizer>>[
-                  Factory<EagerGestureRecognizer>(
-                        () => EagerGestureRecognizer(),
-                  ),
-                ].toSet(),
+                  },
+                  gestureNavigationEnabled: true,
+                  // ignore: prefer_collection_literals
+                  gestureRecognizers: <Factory<OneSequenceGestureRecognizer>>[
+                    Factory<EagerGestureRecognizer>(
+                          () => EagerGestureRecognizer(),
+                    ),
+                  ].toSet(),
+                ),
               ),
             ),
           );
