@@ -27,9 +27,9 @@ class MyApp extends StatelessWidget {
       title: '복대리개발',
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(
-          seedColor: Colors.black,
+          seedColor: const Color(0xFF093687),
         ),
-        primaryColor: Colors.black,
+        primaryColor: const Color(0xFF093687),
         visualDensity: VisualDensity.adaptivePlatformDensity,
         //useMaterial3: true,
       ),
