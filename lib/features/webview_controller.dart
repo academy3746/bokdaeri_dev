@@ -20,7 +20,7 @@ class WebviewController extends StatefulWidget {
 
 class _WebviewControllerState extends State<WebviewController> {
   // Initialize URL
-  final String url = "http://bokdaeri.com/";
+  final String url = "http://lawtary.com/";
 
   // Initialize Back Gesture
   bool isInMainPage = true;
@@ -160,7 +160,7 @@ class _WebviewControllerState extends State<WebviewController> {
                     _controller.complete(webViewController);
                     _viewController = webViewController;
                     webViewController.currentUrl().then((url) {
-                      if (url == "http://bokdaeri.com/") {
+                      if (url == "http://lawtary.com/") {
                         setState(() {
                           isInMainPage = true;
                         });
@@ -172,13 +172,13 @@ class _WebviewControllerState extends State<WebviewController> {
                     });
                   },
                   onPageFinished: (String url) async {
-                    if (url.contains("http://bokdaeri.com/") &&
+                    if (url.contains("http://lawtary.com/") &&
                         _viewController != null) {
                       final cookies = await _getCookies(_viewController!);
                       await _saveCookies(cookies);
                     }
 
-                    if (url.contains("http://bokdaeri.com/login.php") && _viewController != null) {
+                    if (url.contains("http://lawtary.com/login.php") && _viewController != null) {
                       final cookies = await _loadCookies();
 
                       if (cookies != null) {
