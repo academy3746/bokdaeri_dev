@@ -9,6 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_webview_pro/webview_flutter.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class WebviewController extends StatefulWidget {
   const WebviewController({super.key});
@@ -74,6 +75,19 @@ class _WebviewControllerState extends State<WebviewController> {
   Future<String?> _loadCookies() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     return prefs.getString('cookies');
+  }
+
+  void launchURL(String url) async {
+    final marketUrl = Uri.parse(url);
+
+    if (await canLaunchUrl(marketUrl)) {
+      await launchUrl(
+        marketUrl,
+        mode: LaunchMode.externalNonBrowserApplication,
+      );
+    } else {
+      throw "Can not launch $marketUrl";
+    }
   }
 
   @override
@@ -179,6 +193,14 @@ class _WebviewControllerState extends State<WebviewController> {
                           () => EagerGestureRecognizer(),
                     ),
                   ].toSet(),
+                  navigationDelegate: (NavigationRequest request) async {
+                    if (request.url.startsWith(
+                        "https://play.google.com/store/apps/details?id=org.khug.khmg")) {
+                      launchURL(request.url);
+                      return NavigationDecision.prevent;
+                    }
+                    return NavigationDecision.navigate;
+                  },
                 ),
               ),
             ),
